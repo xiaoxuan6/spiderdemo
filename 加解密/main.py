@@ -30,6 +30,7 @@ import time
 
 import requests
 from DrissionPage import ChromiumPage, ChromiumOptions
+
 from base import *
 
 co = ChromiumOptions()
@@ -66,6 +67,7 @@ headers = {
     'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36',
 }
 
+
 def parse_page():
     resp = requests.get('https://www.spiderdemo.cn/ob/api/challenge/init/?challenge_type=ob_challenge1',
                         headers=headers, cookies=cookies).json()
@@ -85,11 +87,15 @@ def parse_page_data(page):
     return sum(response.get('page_data'))
 
 
-count = parse_page()
-for page in range(2, 101):
-    print('第 %d 页' % page)
-    count += parse_page_data(page)
+try:
+    count = parse_page()
+    for page in range(2, 101):
+        print('第 %d 页' % page)
+        count += parse_page_data(page)
 
-print(count)
+    print(count)
+except:
+    pass
 
 dp.close()
+dp.quit()
