@@ -10,7 +10,7 @@ import threading
 from concurrent.futures import ThreadPoolExecutor
 
 config = configparser.ConfigParser()
-config.read('./../config.ini')
+config.read('./../config.ini', encoding='utf-8')
 
 
 class base(object):
