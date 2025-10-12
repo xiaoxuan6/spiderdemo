@@ -21,22 +21,24 @@ class captcha_identify(object):
         self.token = config['Captcha']['token']
         self.url = config['Captcha']['url']
         self.is_show = is_show
+        self.model = config['Captcha']['model']
 
     def identify(self, img):
-        return captcha(self.url, self.token, self.is_show).identify_text(img)
+        return captcha(self.url, self.model, self.token, self.is_show).identify_text(img)
 
     def operation(self, img):
-        return captcha(self.url, self.token, self.is_show).identify_operation(img)
+        return captcha(self.url, self.model, self.token, self.is_show).identify_operation(img)
 
 
 class captcha(object):
-    def __init__(self, url, token, is_show=False):
+    def __init__(self, url, model, token, is_show=False):
         self.url = url
         self.token = token
         self.headers = {
             'Authorization': 'Bearer ' + token
         }
         self.is_show = is_show
+        self.model = model
 
     def img2base64(self, img):
         if isinstance(img, bytes):
@@ -84,7 +86,7 @@ class captcha(object):
             raise TypeError("未知图片类型")
 
         json_data = {
-            'model': 'gpt-4o-mini',
+            'model': self.model,
             'messages': [
                 {
                     'role': 'user',
