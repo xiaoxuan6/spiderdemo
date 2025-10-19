@@ -8,8 +8,8 @@
 import os
 import time
 
+import ddddocr
 import requests
-from captcha_api import captcha_identify
 
 from base import *
 
@@ -53,9 +53,18 @@ def parse_captcha():
     # Image.LANCZOS（Lanczos 插值，质量最佳但计算较慢）
     # Image.open('captcha.png').resize((300, 100), Image.LANCZOS).save('captcha.png')
 
+    from PIL import Image
+    img = Image.open('captcha.png')
+    crop_box = (53, 20, 95, 36)
+    cropped_img = img.crop(crop_box)
+    scale_factor = 2
+    width, height = cropped_img.size
+    resized_img = cropped_img.resize((width * scale_factor, height * scale_factor), Image.LANCZOS)
+    resized_img.save("resized.png")
+
 
 def parse_captcha_identify():
-    return captcha_identify().identify(open('captcha.png', 'rb').read())
+    return ddddocr.DdddOcr(show_ad=False).classification(open('resized.png', 'rb').read())
 
 
 def parse_captcha_verify():
@@ -97,3 +106,4 @@ if __name__ == '__main__':
 
     print(count)
     os.remove('captcha.png')
+    os.remove('resized.png')

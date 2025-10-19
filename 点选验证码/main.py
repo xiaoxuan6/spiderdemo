@@ -8,15 +8,17 @@
 import time
 
 import execjs
-import loguru
 import requests
+from loguru import logger
+
+import base
 
 headers = {
     "referer": "https://www.spiderdemo.cn/captcha/cap8_challenge/?challenge_type=cap8_challenge",
     "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"
 }
 cookies = {
-    "sessionid": "pq61e3bxu9aeersyhdnthu8a0cekey9m"
+    "sessionid": base.config['Session']['value']
 }
 
 
@@ -75,7 +77,7 @@ if __name__ == '__main__':
     '''
     captcha_id, img_base64 = fetch_captcha_img()
     axis = identify_captcha(img_base64)
-    loguru.logger.info('文字坐标：' + str(axis))
+    logger.info('文字坐标：' + str(axis))
 
     captcha_verify(captcha_id, axis, 2)
     # 返回结果：{'success': True, 'data_type': 'page', 'page_data': [7763, 6725, 3217, 7716, 2111, 7794, 7888, 6189, 1931, 9828], 'current_page': 2, 'total_pages': 100, 'challenge_type': 'cap8_challenge', 'message': '点选验证成功，获取第2页数据'}
