@@ -11,7 +11,7 @@ import time
 import requests
 
 cookies = {
-    'sessionId': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVVUlEIjoiN2ZmNzc3ZmQtNzE4Ni00ZDg1LThiNjctNWRhYjQyMGVjMjgwIiwiSUQiOjgsIlVzZXJuYW1lIjoiMTUyNjU5MjYxNzgiLCJCdWZmZXJUaW1lIjo4NjQwMCwiaXNzIjoicW1QbHVzIiwiYXVkIjpbIkFOVEkiXSwiZXhwIjoxNzYyNTA1MTc4LCJuYmYiOjE3NjE5MDAzNzh9.Gc0MHKVKOTAbjh1f2iH3xf9nrpm-t4PR_gXPqGNd7wY',
+    'sessionId': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVVUlEIjoiN2ZmNzc3ZmQtNzE4Ni00ZDg1LThiNjctNWRhYjQyMGVjMjgwIiwiSUQiOjgsIlVzZXJuYW1lIjoiMTUyNjU5MjYxNzgiLCJCdWZmZXJUaW1lIjo4NjQwMCwiaXNzIjoicW1QbHVzIiwiYXVkIjpbIkFOVEkiXSwiZXhwIjoxNzY4NzA3OTU1LCJuYmYiOjE3NjgxMDMxNTV9.xh1MXgi0FKlaUNyDI9hBWc-nt_IH38jVNKHpxXbpgXo',
 }
 
 headers = {
@@ -28,23 +28,25 @@ headers = {
 
 
 def fetch_numbers_sum(page: int) -> int:
-    timestamp = str(int(time.time() * 1000))
-    json_data = {
-        'page': str(page),
-        'timestamp': timestamp,
-        'sign': hashlib.sha256(timestamp.encode()).hexdigest(),
-    }
-    print(json_data)
-
-    response = requests.post(
-        'http://antispider.top/api/challenge/14',
-        cookies=cookies,
-        headers=headers,
-        json=json_data,
-        verify=False
-    ).json()
-    numbers = response.get('data', {}).get('numbers', [])
-    return sum(numbers)
+    while True:
+        try:
+            timestamp = str(int(time.time() * 1000))
+            json_data = {
+                'page': str(page),
+                'timestamp': timestamp,
+                'sign': hashlib.sha256(timestamp.encode()).hexdigest(),
+            }
+            response = requests.post(
+                'http://antispider.top/api/challenge/14',
+                cookies=cookies,
+                headers=headers,
+                json=json_data,
+                verify=False
+            )
+            numbers = response.json().get('data', {}).get('numbers', [])
+            return sum(numbers)
+        except:
+            print(f"第 {page} 页获取数据失败，重试中……")
 
 
 if __name__ == '__main__':
